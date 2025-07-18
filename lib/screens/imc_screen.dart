@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ImcScreen extends StatefulWidget {
   const ImcScreen({super.key});
@@ -12,34 +13,50 @@ class _ImcScreenState extends State<ImcScreen> {
   final TextEditingController _alturaController = TextEditingController();
   double? _imc;
   String? _faixa;
+  String? _erro;
 
   void _calcularIMC() {
     final peso = double.tryParse(_pesoController.text.replaceAll(',', '.'));
     final altura = double.tryParse(_alturaController.text.replaceAll(',', '.'));
-    if (peso != null && altura != null && altura > 0) {
-      final imc = peso / (altura * altura);
-      String faixa;
-      if (imc < 18.5) {
-        faixa = 'Abaixo do peso';
-      } else if (imc < 25) {
-        faixa = 'Normal';
-      } else if (imc < 30) {
-        faixa = 'Sobrepeso';
-      } else {
-        faixa = 'Obesidade';
-      }
+    if (peso == null || altura == null || peso <= 0 || altura <= 0) {
       setState(() {
-        _imc = imc;
-        _faixa = faixa;
+        _erro = 'Por favor, preencha peso e altura corretamente.';
+        _imc = null;
+        _faixa = null;
       });
+      return;
     }
+    final imc = peso / (altura * altura);
+    String faixa;
+    if (imc < 18.5) {
+      faixa = 'Abaixo do peso';
+    } else if (imc < 25) {
+      faixa = 'Normal';
+    } else if (imc < 30) {
+      faixa = 'Sobrepeso';
+    } else {
+      faixa = 'Obesidade';
+    }
+    setState(() {
+      _imc = imc;
+      _faixa = faixa;
+      _erro = null;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calcular IMC'),
+        title: RichText(
+          text: TextSpan(
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            children: [
+              const TextSpan(text: 'Nutri'),
+              TextSpan(text: 'AI', style: TextStyle(color: Theme.of(context).primaryColor)),
+            ],
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -49,9 +66,23 @@ class _ImcScreenState extends State<ImcScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const Text(
+              'Cálculo de IMC',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 24),
             TextField(
               controller: _pesoController,
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              maxLength: 4,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9.,]{0,4}')),
+              ],
               decoration: InputDecoration(
                 labelText: 'Peso (kg)',
                 labelStyle: const TextStyle(color: Colors.white70),
@@ -63,7 +94,11 @@ class _ImcScreenState extends State<ImcScreen> {
             const SizedBox(height: 16),
             TextField(
               controller: _alturaController,
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              maxLength: 4,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^[0-9.,]{0,4}')),
+              ],
               decoration: InputDecoration(
                 labelText: 'Altura (m)',
                 labelStyle: const TextStyle(color: Colors.white70),
@@ -87,6 +122,15 @@ class _ImcScreenState extends State<ImcScreen> {
               child: const Text('Calcular'),
             ),
             const SizedBox(height: 32),
+            if (_erro != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(
+                  _erro!,
+                  style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             if (_imc != null && _faixa != null)
               Column(
                 children: [

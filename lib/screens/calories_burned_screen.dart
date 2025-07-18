@@ -27,7 +27,7 @@ class _CaloriesBurnedScreenState extends State<CaloriesBurnedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calorias Gastas'),
+        title: Text('NutriAI', style: TextStyle(color: Theme.of(context).primaryColor)),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

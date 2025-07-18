@@ -13,12 +13,21 @@ class OnboardingScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              'Bem-vindo ao NutriAI',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                children: [
+                  const TextSpan(text: 'Bem-vindo ao '),
+                  TextSpan(
+                    text: 'NutriAI',
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 16),

@@ -10,7 +10,7 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('NutriAI', style: TextStyle(color: Colors.white)),
+        title: Text('NutriAI', style: TextStyle(color: Theme.of(context).primaryColor)),
         centerTitle: true,
       ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

@@ -14,7 +14,7 @@ class InsightsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Insights de Saúde'),
+        title: Text('NutriAI', style: TextStyle(color: Theme.of(context).primaryColor)),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
